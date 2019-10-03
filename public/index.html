@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>Hello World</title>
 </head>
+<style>* {padding: 0; margin: 0}</style>
 <script src="pixi/pixi.min.js"></script>
 <body>
   <script type="text/javascript">
@@ -11,8 +12,14 @@
     if(!PIXI.utils.isWebGLSupported()){
       type = "canvas"
     }
-
     PIXI.utils.sayHello(type)
+
+    //Aliases
+    let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite;
+
     //Create a Pixi Application
     let app = new PIXI.Application({ 
         width: 800,         // default: 800
@@ -33,6 +40,20 @@
 
     //Add the canvas that Pixi automatically created for you to the HTML document
     document.body.appendChild(app.view);
+
+    //load an image and run the `setup` function when it's done
+    loader
+      .add("images/burns.png")
+      .load(setup);
+
+    //This `setup` function will run when the image has loaded
+    function setup() {
+      // create the sprite
+      let burns = new Sprite(resources["images/burns.png"].texture);
+
+      // add Mr. Burns to the stage
+      app.stage.addChild(burns)
+    }
   </script>
 </body>
 </html>
