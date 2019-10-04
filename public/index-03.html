@@ -1,0 +1,93 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Moving sprites</title>
+<style>* {padding: 0; margin: 0} .return { position: absolute; top: 15px; right: 15px; z-index: 10; color: white; }</style>
+<body>
+<a class="return" href="/">Back to index page</a>
+<p>Left mouse click to change direction</p>
+<script src="../pixi/pixi.min.js"></script>
+<script>
+
+//Aliases
+let Application = PIXI.Application,
+	Container = PIXI.Container,
+	loader = PIXI.loader,
+	resources = PIXI.loader.resources,
+	TextureCache = PIXI.utils.TextureCache,
+	Sprite = PIXI.Sprite;
+
+//Create a Pixi Application
+let app = new Application({ 
+		width: window.innerWidth, 
+		height: 500,                       
+		antialiasing: true, 
+		transparent: false, 
+		resolution: 1
+	}
+);
+
+//Add the canvas that Pixi automatically created for you to the HTML document
+document.body.prepend(app.view);
+
+loader
+.add("images/animals.json")
+.load(setup);
+
+//Define any variables that are used in more than one function
+let cat, dog, direction = 1;
+
+function setup() {
+	id = PIXI.loader.resources["images/animals.json"].textures;
+	
+	cat = new Sprite(id["cat.png"]);
+	cat.y = 96; 
+	app.stage.addChild(cat);
+
+	dog = new Sprite(id["hedgehog.png"]);
+	dog.y = 196;
+	app.stage.addChild(dog);
+	
+
+	//Start the game loop by adding the `gameLoop` function to
+	//Pixi's `ticker` and providing it with a `delta` argument.
+	//Any functions added to the `ticker` will be called 60 times per second.
+	//This means that the `gameLoop` function (defined in the code ahead) will be updated
+	//60 times per second. 
+	app.ticker.add(delta => gameLoop(delta));
+}
+
+document.addEventListener('click', (e) => {
+	direction *= -1
+});
+
+document.addEventListener('keydown', (e) => {
+	if (e.keyCode === 39) {
+		dog.x +=5;
+	}
+	if (e.keyCode === 37) {
+		dog.x -=5;
+	}
+	if (e.keyCode === 38) {
+		dog.y -=5;
+	}
+	if (e.keyCode === 40) {
+		dog.y +=5;
+	}
+});
+
+function gameLoop(delta){
+	//Move the cat 1 pixel 
+	cat.x += 1 * direction;
+
+	if (cat.x < 0) {
+		cat.x = window.innerWidth;
+	}
+
+	if (cat.x > window.innerWidth) {
+		cat.x = 0;
+	}
+}
+</script>
+</body>
+
+
